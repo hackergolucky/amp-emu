@@ -16,8 +16,11 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+
+#include "gba.h"
 
 
 int main(int argc, char *argv[])
@@ -25,16 +28,21 @@ int main(int argc, char *argv[])
     int retval = 0;
 
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_Window *window = SDL_CreateWindow("Amp GBA Emulator",
-                                            SDL_WINDOWPOS_CENTERED,
-                                            SDL_WINDOWPOS_CENTERED,
-                                            1280, 720,
-                                            SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    SDL_Window *window = SDL_CreateWindow(
+        "Amp GBA Emulator",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1280, 720,
+        SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+    );
     if(!window)
     {
         retval = 1;
         goto end;
     }
+
+    struct gba_t *gba = (struct gba_t *) malloc(sizeof(struct gba_t));
+    gba_init(gba);
 
     while(true)
     {
@@ -48,6 +56,7 @@ int main(int argc, char *argv[])
 
     destroy:
         SDL_DestroyWindow(window);
+        gba_destroy(gba);
     end:
         SDL_Quit();
         return retval;
