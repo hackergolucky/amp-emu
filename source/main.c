@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     struct window_t *win = (struct window_t *) malloc(sizeof(struct window_t));
     struct gba_t *gba = (struct gba_t *) malloc(sizeof(struct gba_t));
     bool init_failed =
-        window_init(win) | 
+        window_init(win, 240, 160) | 
         gba_init(gba);
 
     if(init_failed) {
@@ -48,8 +48,9 @@ int main(int argc, char *argv[])
     destroy:
         window_destroy(win);
         gba_destroy(gba);
-    end:
+
         free(win);
         free(gba);
+        
         return retval;
 }

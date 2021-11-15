@@ -10,10 +10,9 @@ file(GLOB_RECURSE AMP_SRCS "source/*.c" "source/*.cpp")
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/include/
+    ${CMAKE_SOURCE_DIR}/include/imgui/
     
     ${CMAKE_SOURCE_DIR}/externals/nfde/src/include/
-    ${CMAKE_SOURCE_DIR}/externals/imgui/
-    ${CMAKE_SOURCE_DIR}/externals/imgui/backends/
     
     ${SDL2_INCLUDE_DIRS}
 )

@@ -23,14 +23,27 @@
 
 struct window_t
 {
+    int width, height, scale;
+    uint32_t *pixelbuf;
+
     SDL_Window *window;
+    SDL_Renderer *renderer;
+    SDL_Texture *texture;
 
     bool running;
 };
 
-int window_init(struct window_t *win);
+#if __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+int window_init(struct window_t *win, int width, int height);
 void window_destroy(struct window_t *win);
 
 void window_update(struct window_t *win);
+
+#if __cplusplus
+}
+#endif // __cplusplus
 
 #endif // __WINDOW_H__
