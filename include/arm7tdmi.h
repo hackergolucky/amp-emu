@@ -41,6 +41,8 @@ int mode_to_index(enum Mode mode);
 
 struct arm7tdmi_t
 {
+    bool running;
+
     enum State state;
     // These registers hide under the hood.
     // They are not accessed directly.

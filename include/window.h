@@ -14,42 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef __WINDOW_H__
+#define __WINDOW_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include <SDL2/SDL.h>
-
-#include "window.h"
-#include "gba.h"
+#include <stdbool.h>
 
 
-int main(int argc, char *argv[])
+struct window_t
 {
-    int retval = 0;
+    SDL_Window *window;
 
-    struct window_t *win = (struct window_t *) malloc(sizeof(struct window_t));
-    struct gba_t *gba = (struct gba_t *) malloc(sizeof(struct gba_t));
-    bool init_failed =
-        window_init(win) | 
-        gba_init(gba);
+    bool running;
+};
 
-    if(init_failed) {
-        retval = 1;
-        goto destroy;
-    }
+int window_init(struct window_t *win);
+void window_destroy(struct window_t *win);
 
-    while(win->running && gba->running)
-    {
-        window_update(win);
-        gba_update(gba);
-    }
+void window_update(struct window_t *win);
 
-    destroy:
-        window_destroy(win);
-        gba_destroy(gba);
-    end:
-        free(win);
-        free(gba);
-        return retval;
-}
+#endif // __WINDOW_H__

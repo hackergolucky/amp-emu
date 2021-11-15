@@ -14,42 +14,44 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include "window.h"
 #include <SDL2/SDL.h>
 
-#include "window.h"
-#include "gba.h"
 
-
-int main(int argc, char *argv[])
+int window_init(struct window_t *win)
 {
-    int retval = 0;
-
-    struct window_t *win = (struct window_t *) malloc(sizeof(struct window_t));
-    struct gba_t *gba = (struct gba_t *) malloc(sizeof(struct gba_t));
-    bool init_failed =
-        window_init(win) | 
-        gba_init(gba);
-
-    if(init_failed) {
-        retval = 1;
-        goto destroy;
-    }
-
-    while(win->running && gba->running)
+    win->running = true;
+    
+    SDL_Init(SDL_INIT_EVERYTHING);
+    if((win->window = SDL_CreateWindow(
+        "Amp GBA Emulator",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1280, 720,
+        SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+    )) == NULL)
     {
-        window_update(win);
-        gba_update(gba);
+        printf("Error creating SDL_Window instance!\n");
+        return 1;
     }
 
-    destroy:
-        window_destroy(win);
-        gba_destroy(gba);
-    end:
-        free(win);
-        free(gba);
-        return retval;
+    return 0;
+}
+
+void window_destroy(struct window_t *win)
+{
+    if(win->window)
+        SDL_DestroyWindow(win->window);
+    SDL_Quit();
+}
+
+void window_update(struct window_t *win)
+{
+    SDL_Event e;
+    while(SDL_PollEvent(&e))
+    {
+        if(e.type == SDL_QUIT) {
+            win->running = false;
+        }
+    }
 }

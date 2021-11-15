@@ -17,13 +17,17 @@
 
 #ifndef __GBA_H__
 #define __GBA_H__
+#include <stdbool.h>
 
 struct gba_t
 {
+    bool running;
     struct arm7tdmi_t *arm7tdmi;
 };
 
-void gba_init(struct gba_t *gba);
+int gba_init(struct gba_t *gba);
 void gba_destroy(struct gba_t *gba);
+
+void gba_update(struct gba_t *gba);
 
 #endif // __GBA_H__

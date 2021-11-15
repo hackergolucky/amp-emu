@@ -21,14 +21,25 @@
 #include "arm7tdmi.h"
 
 
-void gba_init(struct gba_t *gba)
+int gba_init(struct gba_t *gba)
 {
+    gba->running = true;
+
     gba->arm7tdmi = (struct arm7tdmi_t *) malloc(sizeof(struct arm7tdmi_t));
     arm7tdmi_init(gba->arm7tdmi);
+
+    return 0;
 }
 
 void gba_destroy(struct gba_t *gba)
 {
-    arm7tdmi_destroy(gba->arm7tdmi);
-    free(gba->arm7tdmi);
+    if(gba->arm7tdmi) {
+        arm7tdmi_destroy(gba->arm7tdmi);
+        free(gba->arm7tdmi);
+    }
+}
+
+void gba_update(struct gba_t *gba)
+{
+    
 }
