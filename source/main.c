@@ -28,29 +28,30 @@ int main(int argc, char *argv[])
 {
     int retval = 0;
 
-    struct window_t *win = (struct window_t *) malloc(sizeof(struct window_t));
+    struct windowmgr_t *mgr = (struct windowmgr_t *) malloc(sizeof(struct windowmgr_t));
+    windowmgr_init(mgr);
+    window_show(typeToWindow(mgr, WINDOW_GAME));
+
     struct gba_t *gba = (struct gba_t *) malloc(sizeof(struct gba_t));
-    bool init_failed =
-        window_init(win, 240, 160) | 
-        gba_init(gba);
+    bool init_failed = gba_init(gba);
 
     if(init_failed) {
         retval = 1;
         goto destroy;
     }
 
-    while(win->running && gba->running)
+    while(mgr->anyWindowsRunning && gba->running)
     {
-        window_update(win);
+        windowmgr_update(mgr);
         gba_update(gba);
     }
 
     destroy:
-        window_destroy(win);
         gba_destroy(gba);
+        windowmgr_destroy(mgr);
 
-        free(win);
         free(gba);
-        
+        free(mgr);
+
         return retval;
 }

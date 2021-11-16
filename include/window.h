@@ -16,34 +16,40 @@
  */
 #ifndef __WINDOW_H__
 #define __WINDOW_H__
-
-#include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <SDL2/SDL.h>
 
+enum WindowType
+{
+    WINDOW_GAME,
+    WINDOW_TEST,
+    WINDOW_COUNT
+};
 
 struct window_t
 {
-    int width, height, scale;
-    uint32_t *pixelbuf;
-
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *texture;
-
-    bool running;
+    int winID;
+    bool isShown;
+    SDL_Window *sdl_window;
+    SDL_Renderer *sdl_renderer;
 };
 
-#if __cplusplus
-extern "C" {
-#endif // __cplusplus
-
-int window_init(struct window_t *win, int width, int height);
+void window_create(struct window_t *win, const char *title, int w, int h);
+void window_show(struct window_t *win);
+void window_close(struct window_t *win);
 void window_destroy(struct window_t *win);
 
-void window_update(struct window_t *win);
+struct windowmgr_t
+{
+    bool anyWindowsRunning;
+    
+    struct window_t *gameWindow;
+    struct window_t *testWindow;
+};
 
-#if __cplusplus
-}
-#endif // __cplusplus
+struct window_t * typeToWindow(struct windowmgr_t *mgr, enum WindowType type);
+void windowmgr_init(struct windowmgr_t *mgr);
+void windowmgr_destroy(struct windowmgr_t *mgr);
+void windowmgr_update(struct windowmgr_t *mgr);
 
 #endif // __WINDOW_H__
